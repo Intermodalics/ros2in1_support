@@ -8,9 +8,9 @@ No need to modify your ROS 2 workspace.
 ## Why on earth?
 We got very frustrated with ros_bridge, both in terms of usability and performance... to the point where it seemed easier to just include ROS 2 headers and start working with ROS 2 directly in a ROS 1 node.
 
-We hope it helps more gradual transitions of existing ROS 1 nodes to the ROS 2 world. There are many changes you need to do to migrate a ROS 1 package to ROS 2. This package focusses on the most important mechanisms: publish/subscribe.
+We hope it helps more gradual transitions of existing ROS 1 nodes to the ROS 2 world. There are many changes you need to do to migrate a ROS 1 package to ROS 2. This package focusses on the most important mechanisms: publish/subscribe and Services.
 
-We don't plan on migrating parameters or action
+See further below for limitations and roadmap ideas.
 
 ## Typical use: publish to ROS 2
 Add this to your ROS 1 CMakeLists.txt file, after your project(myproject) function:
