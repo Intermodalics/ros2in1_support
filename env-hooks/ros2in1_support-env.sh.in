@@ -1,0 +1,6 @@
+# ROS 2 environment variables required at run-time.
+: ${AMENT_PREFIX_PATH:=${CATKIN_ENV_HOOK_WORKSPACE}}
+: ${RMW_IMPLEMENTATION:=@RMW_IMPLEMENTATION@}
+
+export AMENT_PREFIX_PATH
+export RMW_IMPLEMENTATION

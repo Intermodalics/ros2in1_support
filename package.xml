@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>ros2in1_support</name>
+  <version>0.0.0</version>
+  <description>CMake macros and functions to help finding and using ROS 2 dependencies in ROS 1 packages</description>
+
+  <maintainer email="info@intermodalics.eu">Intermodalics BV</maintainer>
+  <author>Johannes Meyer</author>
+  <license>Closed</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>aslam_cv_common</depend>
+  <depend>roscpp</depend>
+  <depend>tf2</depend>
+  <depend>tf2_geometry_msgs</depend>
+  <depend>tf2_msgs</depend>
+</package>
