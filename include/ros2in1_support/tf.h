@@ -9,7 +9,6 @@
 #include <memory>
 #include <vector>
 
-#include <aslam/common/pose-types.h>
 #include <ros/node_handle.h>
 #include <ros/publisher.h>
 #include <tf2_msgs/TFMessage.h>
@@ -54,16 +53,6 @@ class TransformBroadcaster {
 void publishTf(std::vector<geometry_msgs::TransformStamped> transforms);
 void publishTf(const geometry_msgs::TransformStamped& transform);
 void publishTf(geometry_msgs::TransformStamped&& transform);
-
-void publishTf(
-    const aslam::Transformation& T, const std::string& frame_id,
-    const std::string& child_frame_id, const ros::Time& ros_time,
-    geometry_msgs::TransformStamped* transform_msg,
-    const bool project_to_2d = false);
-
-void publishTf(
-    const aslam::Transformation& T, const std::string& frame_id,
-    const std::string& child_frame_id, geometry_msgs::TransformStamped* transform_msg);
 
 }  // namespace ros2in1_support
 

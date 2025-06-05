@@ -7,7 +7,6 @@
 
 #include <utility>
 
-#include <glog/logging.h>
 #include <tf2/utils.h>
 
 #ifdef ROS2_SUPPORT
@@ -75,44 +74,6 @@ void publishTf(const geometry_msgs::TransformStamped& transform) {
 
 void publishTf(geometry_msgs::TransformStamped&& transform) {
   TransformBroadcaster::getInstance().sendTransform(std::move(transform));
-}
-
-void publishTf(
-    const aslam::Transformation& T, const std::string& frame_id,
-    const std::string& child_frame_id, const ros::Time& ros_time,
-    geometry_msgs::TransformStamped* transform_msg,
-    const bool project_to_2d) {
-  CHECK(!frame_id.empty());
-  CHECK(!child_frame_id.empty());
-
-  geometry_msgs::TransformStamped transform_msg_tmp;
-  if (transform_msg == nullptr) transform_msg = &transform_msg_tmp;
-
-  transform_msg->header.frame_id = frame_id;
-  transform_msg->header.stamp = ros_time;
-  transform_msg->child_frame_id = child_frame_id;
-  transform_msg->transform.translation.x = T.getPosition().x();
-  transform_msg->transform.translation.y = T.getPosition().y();
-  transform_msg->transform.translation.z = T.getPosition().z();
-  transform_msg->transform.rotation.x = T.getRotation().x();
-  transform_msg->transform.rotation.y = T.getRotation().y();
-  transform_msg->transform.rotation.z = T.getRotation().z();
-  transform_msg->transform.rotation.w = T.getRotation().w();
-
-  if (project_to_2d) {
-    transform_msg->transform.translation.z = 0.0;
-    double yaw = tf2::getYaw(transform_msg->transform.rotation);
-    tf2::Quaternion orientation_yaw_only(tf2::Vector3(0.0, 0.0, 1.0), yaw);
-    transform_msg->transform.rotation = tf2::toMsg(orientation_yaw_only);
-  }
-
-  TransformBroadcaster::getInstance().sendTransform(*transform_msg);
-}
-
-void publishTf(
-    const aslam::Transformation& T, const std::string& frame_id,
-    const std::string& child_frame_id, geometry_msgs::TransformStamped* transform_msg) {
-  publishTf(T, frame_id, child_frame_id, ros::Time::now(), transform_msg);
 }
 
 }  // namespace ros2in1_support
