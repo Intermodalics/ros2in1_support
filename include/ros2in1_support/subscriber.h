@@ -25,20 +25,34 @@ namespace conversions {
 template <typename Ros1MessageT> struct Ros2MessageType;
 }  // namespace conversions
 
+namespace transport_hint_queries {
+inline bool isReliable(ros::TransportHints& transport_hints) {
+  const auto& transports = transport_hints.getTransports();
+  return (std::find(transports.begin(), transports.end(), "TCP")
+          != transports.end());
+}
+
+inline bool isUnreliable(ros::TransportHints& transport_hints) {
+  const auto& transports = transport_hints.getTransports();
+  return (std::find(transports.begin(), transports.end(), "UDP")
+          != transports.end());
+}
+}
+
 template <typename Ros1MessageT,
           typename Ros2MessageT = typename conversions::Ros2MessageType<Ros1MessageT>::type>
 class Subscriber {
  public:
 
 private:
-rclcpp::QoS make_qos_from_transport_hints(uint32_t queue_size, const ros::TransportHints& transport_hints) const {
+rclcpp::QoS make_qos_from_transport_hints(uint32_t queue_size, ros::TransportHints transport_hints) const {
   auto reliability = rclcpp::ReliabilityPolicy::SystemDefault;
-  if (transport_hints.isReliable()) {
+  if (transport_hint_queries::isReliable(transport_hints)) {
     reliability = rclcpp::ReliabilityPolicy::Reliable;
-  } else if (transport_hints.isUnreliable()) {
+  } else if (transport_hint_queries::isUnreliable(transport_hints)) {
     reliability = rclcpp::ReliabilityPolicy::BestEffort;
   }
-  return rclcpp::QoS(rclcpp::QoSInitialization::from_rmw(queue_size)).reliability(reliability);
+  return rclcpp::QoS(queue_size).reliability(reliability);
 }
 
 public:
@@ -84,21 +98,48 @@ void subscribe(ros::NodeHandle& ros1_node, const std::string& topic, uint32_t qu
   ros1_subscriber_ = ros1_node.subscribe<Ros1MessageT>(
     topic, queue_size, fp, obj, transport_hints);
 }
+
+template<class M, class T>
+void subscribe(ros::NodeHandle& ros1_node, const std::string& topic, uint32_t queue_size, 
+    void(T::*fp)(const boost::shared_ptr<M const>&), T* obj, 
+    const ros::TransportHints& transport_hints = ros::TransportHints())
+{
+  // Set up ROS 2 subscription with a lambda that converts and calls the ROS 1-style const callback
+  rclcpp::Node::SharedPtr node = ros2in1_support::getRos2Node();
+  ros2_subscription_ = node->create_subscription<Ros2MessageT>(
+    topic, make_qos_from_transport_hints(queue_size, transport_hints),
+    [fp, obj](const typename Ros2MessageT::SharedPtr ros2_msg) {
+      boost::shared_ptr<Ros1MessageT> ros1_msg = boost::make_shared<Ros1MessageT>();
+      conversions::convert_2_to_1(*ros2_msg, *ros1_msg);
+      // Call the ROS 1-style const callback
+      (obj->*fp)(ros1_msg);
+    });
+
+  // Full forward to ROS 1.
+  ros1_subscriber_ = ros1_node.subscribe<Ros1MessageT>(
+    topic, queue_size, fp, obj, transport_hints);
+}
+template<class M, class T>
+void subscribe(ros::NodeHandle& ros1_node, const std::string& topic, uint32_t queue_size, 
+    void(T::*fp)(const boost::shared_ptr<M const>&) const, T* obj, 
+    const ros::TransportHints& transport_hints = ros::TransportHints())
+{
+  // Set up ROS 2 subscription with a lambda that converts and calls the ROS 1-style const callback
+  rclcpp::Node::SharedPtr node = ros2in1_support::getRos2Node();
+  ros2_subscription_ = node->create_subscription<Ros2MessageT>(
+    topic, make_qos_from_transport_hints(queue_size, transport_hints),
+    [fp, obj](const typename Ros2MessageT::SharedPtr ros2_msg) {
+      boost::shared_ptr<Ros1MessageT> ros1_msg = boost::make_shared<Ros1MessageT>();
+      conversions::convert_2_to_1(*ros2_msg, *ros1_msg);
+      // Call the ROS 1-style const callback
+      (obj->*fp)(ros1_msg);
+    });
+
+  // Full forward to ROS 1.
+  ros1_subscriber_ = ros1_node.subscribe<Ros1MessageT>(
+    topic, queue_size, fp, obj, transport_hints);
+}
 #if 0
-  template<class M, class T>
-  void subscribe(const std::string& topic, uint32_t queue_size, 
-                       void(T::*fp)(const boost::shared_ptr<M const>&), T* obj, 
-                       const ros::TransportHints& transport_hints = ros::TransportHints())
-  {
-  }
-  template<class M, class T>
-  void subscribe(const std::string& topic, uint32_t queue_size, 
-                       void(T::*fp)(const boost::shared_ptr<M const>&) const, T* obj, 
-                       const ros::TransportHints& transport_hints = ros::TransportHints())
-  {
-
-  }
-
   template<class M, class T>
   void subscribe(const std::string& topic, uint32_t queue_size, void(T::*fp)(M), 
                        const boost::shared_ptr<T>& obj, const ros::TransportHints& transport_hints = ros::TransportHints())
