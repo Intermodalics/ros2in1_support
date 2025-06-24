@@ -32,6 +32,13 @@ inline void convert_2_to_1<std_srvs::Empty::Request, std_srvs::srv::Empty::Reque
 
 template <>
 inline void convert_1_to_2<std_srvs::srv::Empty::Response, std_srvs::Empty::Response>(
+    const std_srvs::Empty::Response&,
+    std_srvs::srv::Empty::Response&) {
+  // empty
+}
+
+template <>
+inline void convert_1_to_2<std_srvs::srv::Empty::Response, std_srvs::Empty::Response>(
     std_srvs::Empty::Response&&,
     std_srvs::srv::Empty::Response&) {
   // empty
