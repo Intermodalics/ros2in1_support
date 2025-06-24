@@ -246,8 +246,16 @@ template <>
 inline void convert_2_to_1<geometry_msgs::Twist, geometry_msgs::msg::Twist>(
     const geometry_msgs::msg::Twist& ros2_msg,
     geometry_msgs::Twist& ros1_msg) {
-  convert_2_to_1(ros2_msg.linear, ros1_msg.linear);
-  convert_2_to_1(ros2_msg.angular, ros1_msg.angular);
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.linear, ros1_msg.linear);
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.angular, ros1_msg.angular);
+}
+
+template <>
+inline void convert_2_to_1<geometry_msgs::Twist, geometry_msgs::msg::Twist>(
+    geometry_msgs::msg::Twist&& ros2_msg,
+    geometry_msgs::Twist& ros1_msg) {
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.linear, ros1_msg.linear);
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.angular, ros1_msg.angular);
 }
 
 template <>
