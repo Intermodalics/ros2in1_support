@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>ros2in1_support</name>
-  <version>0.0.0</version>
+  <version>0.1.0</version>
   <description>CMake macros and functions to help finding and using ROS 2 dependencies in ROS 1 packages</description>
 
-  <maintainer email="info@intermodalics.eu">Intermodalics BV</maintainer>
+  <maintainer email="info@intermodalics.ai">Intermodalics BV</maintainer>
   <author>Johannes Meyer</author>
-  <license>Closed</license>
+  <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
 
