@@ -68,7 +68,7 @@ void subscribe(ros::NodeHandle& ros1_node, const std::string& topic, uint32_t qu
     [fp, obj](const typename Ros2MessageT::SharedPtr ros2_msg) {
       // Convert ROS 2 message to ROS 1 message
       Ros1MessageT ros1_msg;
-      conversions::convert_2_to_1(*ros2_msg, ros1_msg);
+      conversions::convert_2_to_1<Ros1MessageT, Ros2MessageT>(*ros2_msg, ros1_msg);
       // Call the ROS 1-style callback
       (obj->*fp)(ros1_msg);
     });
@@ -89,7 +89,7 @@ void subscribe(ros::NodeHandle& ros1_node, const std::string& topic, uint32_t qu
     topic, make_qos_from_transport_hints(queue_size, transport_hints),
     [fp, obj](const typename Ros2MessageT::SharedPtr ros2_msg) {
       Ros1MessageT ros1_msg;
-      conversions::convert_2_to_1(*ros2_msg, ros1_msg);
+      conversions::convert_2_to_1<Ros1MessageT, Ros2MessageT>(*ros2_msg, ros1_msg);
       // Call the ROS 1-style const callback
       (obj->*fp)(ros1_msg);
     });
@@ -110,7 +110,7 @@ void subscribe(ros::NodeHandle& ros1_node, const std::string& topic, uint32_t qu
     topic, make_qos_from_transport_hints(queue_size, transport_hints),
     [fp, obj](const typename Ros2MessageT::SharedPtr ros2_msg) {
       boost::shared_ptr<Ros1MessageT> ros1_msg = boost::make_shared<Ros1MessageT>();
-      conversions::convert_2_to_1(*ros2_msg, *ros1_msg);
+      conversions::convert_2_to_1<Ros1MessageT, Ros2MessageT>(*ros2_msg, *ros1_msg);
       // Call the ROS 1-style const callback
       (obj->*fp)(ros1_msg);
     });
@@ -130,7 +130,7 @@ void subscribe(ros::NodeHandle& ros1_node, const std::string& topic, uint32_t qu
     topic, make_qos_from_transport_hints(queue_size, transport_hints),
     [fp, obj](const typename Ros2MessageT::SharedPtr ros2_msg) {
       boost::shared_ptr<Ros1MessageT> ros1_msg = boost::make_shared<Ros1MessageT>();
-      conversions::convert_2_to_1(*ros2_msg, *ros1_msg);
+      conversions::convert_2_to_1<Ros1MessageT, Ros2MessageT>(std::move(*ros2_msg), *ros1_msg);
       // Call the ROS 1-style const callback
       (obj->*fp)(ros1_msg);
     });

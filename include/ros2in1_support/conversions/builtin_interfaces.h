@@ -29,8 +29,24 @@ inline void convert_2_to_1<ros::Time, builtin_interfaces::msg::Time>(
 }
 
 template <>
+inline void convert_2_to_1<ros::Time, builtin_interfaces::msg::Time>(
+    builtin_interfaces::msg::Time&& ros2_msg,
+    ros::Time& ros1_msg) {
+  ros1_msg.sec = static_cast<uint32_t>(ros2_msg.sec);
+  ros1_msg.nsec = ros2_msg.nanosec;
+}
+
+template <>
 inline void convert_1_to_2<builtin_interfaces::msg::Time, ros::Time>(
     const ros::Time& ros1_msg,
+    builtin_interfaces::msg::Time& ros2_msg) {
+  ros2_msg.sec = static_cast<int32_t>(ros1_msg.sec);
+  ros2_msg.nanosec = ros1_msg.nsec;
+}
+
+template <>
+inline void convert_1_to_2<builtin_interfaces::msg::Time, ros::Time>(
+    ros::Time&& ros1_msg,
     builtin_interfaces::msg::Time& ros2_msg) {
   ros2_msg.sec = static_cast<int32_t>(ros1_msg.sec);
   ros2_msg.nanosec = ros1_msg.nsec;
