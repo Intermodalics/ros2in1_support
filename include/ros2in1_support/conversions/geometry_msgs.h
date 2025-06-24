@@ -15,6 +15,7 @@
 #include <geometry_msgs/msg/quaternion.hpp>
 #include <geometry_msgs/msg/transform.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
+#include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
 #include <geometry_msgs/msg/vector3_stamped.hpp>
 
@@ -26,6 +27,7 @@
 #include <geometry_msgs/Quaternion.h>
 #include <geometry_msgs/Transform.h>
 #include <geometry_msgs/TransformStamped.h>
+#include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Vector3.h>
 #include <geometry_msgs/Vector3Stamped.h>
 
@@ -59,6 +61,9 @@ template <> struct Ros2MessageType<geometry_msgs::Transform> {
 };
 template <> struct Ros2MessageType<geometry_msgs::TransformStamped> {
   typedef geometry_msgs::msg::TransformStamped type;
+};
+template <> struct Ros2MessageType<geometry_msgs::Twist> {
+  typedef geometry_msgs::msg::Twist type;
 };
 template <> struct Ros2MessageType<geometry_msgs::Vector3> {
   typedef geometry_msgs::msg::Vector3 type;
@@ -235,6 +240,30 @@ inline void convert_1_to_2<geometry_msgs::msg::TransformStamped, geometry_msgs::
   convert_1_to_2(ros1_msg.header, ros2_msg.header);
   ros2_msg.child_frame_id = ros1_msg.child_frame_id;
   convert_1_to_2(ros1_msg.transform, ros2_msg.transform);
+}
+
+template <>
+inline void convert_2_to_1<geometry_msgs::Twist, geometry_msgs::msg::Twist>(
+    const geometry_msgs::msg::Twist& ros2_msg,
+    geometry_msgs::Twist& ros1_msg) {
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.linear, ros1_msg.linear);
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.angular, ros1_msg.angular);
+}
+
+template <>
+inline void convert_2_to_1<geometry_msgs::Twist, geometry_msgs::msg::Twist>(
+    geometry_msgs::msg::Twist&& ros2_msg,
+    geometry_msgs::Twist& ros1_msg) {
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.linear, ros1_msg.linear);
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.angular, ros1_msg.angular);
+}
+
+template <>
+inline void convert_1_to_2<geometry_msgs::msg::Twist, geometry_msgs::Twist>(
+    const geometry_msgs::Twist& ros1_msg,
+    geometry_msgs::msg::Twist& ros2_msg) {
+  convert_1_to_2(ros1_msg.linear, ros2_msg.linear);
+  convert_1_to_2(ros1_msg.angular, ros2_msg.angular);
 }
 
 }  // namespace conversions
