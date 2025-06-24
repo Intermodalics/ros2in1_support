@@ -115,8 +115,7 @@ inline void convert_2_to_1<nav_msgs::Odometry, nav_msgs::msg::Odometry>(
   convert_2_to_1(ros2_msg.pose.pose.position, ros1_msg.pose.pose.position);
   convert_2_to_1(ros2_msg.pose.pose.orientation, ros1_msg.pose.pose.orientation);
   convert_2_to_1(ros2_msg.pose.covariance, ros1_msg.pose.covariance);
-  convert_2_to_1(ros2_msg.twist.twist.linear, ros1_msg.twist.twist.linear);
-  convert_2_to_1(ros2_msg.twist.twist.angular, ros1_msg.twist.twist.angular);
+  convert_2_to_1(ros2_msg.twist.twist, ros1_msg.twist.twist);
   convert_2_to_1(ros2_msg.twist.covariance, ros1_msg.twist.covariance);
 }
 
@@ -129,8 +128,7 @@ inline void convert_1_to_2<nav_msgs::msg::Odometry, nav_msgs::Odometry>(
   convert_1_to_2(ros1_msg.pose.pose.position, ros2_msg.pose.pose.position);
   convert_1_to_2(ros1_msg.pose.pose.orientation, ros2_msg.pose.pose.orientation);
   convert_1_to_2(ros1_msg.pose.covariance, ros2_msg.pose.covariance);
-  convert_1_to_2(ros1_msg.twist.twist.linear, ros2_msg.twist.twist.linear);
-  convert_1_to_2(ros1_msg.twist.twist.angular, ros2_msg.twist.twist.angular);
+  convert_1_to_2(ros1_msg.twist.twist, ros2_msg.twist.twist);
   convert_1_to_2(ros1_msg.twist.covariance, ros2_msg.twist.covariance);
 }
 

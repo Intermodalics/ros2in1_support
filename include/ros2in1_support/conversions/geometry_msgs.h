@@ -89,8 +89,8 @@ template <>
 inline void convert_2_to_1<geometry_msgs::PointStamped, geometry_msgs::msg::PointStamped>(
     const geometry_msgs::msg::PointStamped& ros2_msg,
     geometry_msgs::PointStamped& ros1_msg) {
-  convert_2_to_1(ros2_msg.header, ros1_msg.header);
-  convert_2_to_1(ros2_msg.point, ros1_msg.point);
+  convert_2_to_1<std_msgs::Header, std_msgs::msg::Header>(ros2_msg.header, ros1_msg.header);
+  convert_2_to_1<geometry_msgs::Point, geometry_msgs::msg::Point>(ros2_msg.point, ros1_msg.point);
 }
 
 template <>
@@ -125,8 +125,8 @@ template <>
 inline void convert_2_to_1<geometry_msgs::Pose, geometry_msgs::msg::Pose>(
     const geometry_msgs::msg::Pose& ros2_msg,
     geometry_msgs::Pose& ros1_msg) {
-  convert_2_to_1(ros2_msg.position, ros1_msg.position);
-  convert_2_to_1(ros2_msg.orientation, ros1_msg.orientation);
+  convert_2_to_1<geometry_msgs::Point, geometry_msgs::msg::Point>(ros2_msg.position, ros1_msg.position);
+  convert_2_to_1<geometry_msgs::Quaternion, geometry_msgs::msg::Quaternion>(ros2_msg.orientation, ros1_msg.orientation);
 }
 
 template <>
@@ -141,7 +141,7 @@ template <>
 inline void convert_2_to_1<geometry_msgs::PoseArray, geometry_msgs::msg::PoseArray>(
     const geometry_msgs::msg::PoseArray& ros2_msg,
     geometry_msgs::PoseArray& ros1_msg) {
-  convert_2_to_1(ros2_msg.header, ros1_msg.header);
+  convert_2_to_1<std_msgs::Header, std_msgs::msg::Header>(ros2_msg.header, ros1_msg.header);
   convert_2_to_1(ros2_msg.poses, ros1_msg.poses);
 }
 
@@ -157,8 +157,8 @@ template <>
 inline void convert_2_to_1<geometry_msgs::PoseStamped, geometry_msgs::msg::PoseStamped>(
     const geometry_msgs::msg::PoseStamped& ros2_msg,
     geometry_msgs::PoseStamped& ros1_msg) {
-  convert_2_to_1(ros2_msg.header, ros1_msg.header);
-  convert_2_to_1(ros2_msg.pose, ros1_msg.pose);
+  convert_2_to_1<std_msgs::Header, std_msgs::msg::Header>(ros2_msg.header, ros1_msg.header);
+  convert_2_to_1<geometry_msgs::Pose, geometry_msgs::msg::Pose>(ros2_msg.pose, ros1_msg.pose);
 }
 
 template <>
@@ -191,8 +191,8 @@ template <>
 inline void convert_2_to_1<geometry_msgs::Vector3Stamped, geometry_msgs::msg::Vector3Stamped>(
     const geometry_msgs::msg::Vector3Stamped& ros2_msg,
     geometry_msgs::Vector3Stamped& ros1_msg) {
-  convert_2_to_1(ros2_msg.header, ros1_msg.header);
-  convert_2_to_1(ros2_msg.vector, ros1_msg.vector);
+  convert_2_to_1<std_msgs::Header, std_msgs::msg::Header>(ros2_msg.header, ros1_msg.header);
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.vector, ros1_msg.vector);
 }
 
 template <>
@@ -207,8 +207,8 @@ template <>
 inline void convert_2_to_1<geometry_msgs::Transform, geometry_msgs::msg::Transform>(
     const geometry_msgs::msg::Transform& ros2_msg,
     geometry_msgs::Transform& ros1_msg) {
-  convert_2_to_1(ros2_msg.translation, ros1_msg.translation);
-  convert_2_to_1(ros2_msg.rotation, ros1_msg.rotation);
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.translation, ros1_msg.translation);
+  convert_2_to_1<geometry_msgs::Quaternion, geometry_msgs::msg::Quaternion>(ros2_msg.rotation, ros1_msg.rotation);
 }
 
 template <>
@@ -223,9 +223,9 @@ template <>
 inline void convert_2_to_1<geometry_msgs::TransformStamped, geometry_msgs::msg::TransformStamped>(
     const geometry_msgs::msg::TransformStamped& ros2_msg,
     geometry_msgs::TransformStamped& ros1_msg) {
-  convert_2_to_1(ros2_msg.header, ros1_msg.header);
+  convert_2_to_1<std_msgs::Header, std_msgs::msg::Header>(ros2_msg.header, ros1_msg.header);
   ros1_msg.child_frame_id = ros2_msg.child_frame_id;
-  convert_2_to_1(ros2_msg.transform, ros1_msg.transform);
+  convert_2_to_1<geometry_msgs::Transform, geometry_msgs::msg::Transform>(ros2_msg.transform, ros1_msg.transform);
 }
 
 template <>
@@ -235,6 +235,30 @@ inline void convert_1_to_2<geometry_msgs::msg::TransformStamped, geometry_msgs::
   convert_1_to_2(ros1_msg.header, ros2_msg.header);
   ros2_msg.child_frame_id = ros1_msg.child_frame_id;
   convert_1_to_2(ros1_msg.transform, ros2_msg.transform);
+}
+
+template <>
+inline void convert_2_to_1<geometry_msgs::Twist, geometry_msgs::msg::Twist>(
+    const geometry_msgs::msg::Twist& ros2_msg,
+    geometry_msgs::Twist& ros1_msg) {
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.linear, ros1_msg.linear);
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.angular, ros1_msg.angular);
+}
+
+template <>
+inline void convert_2_to_1<geometry_msgs::Twist, geometry_msgs::msg::Twist>(
+    geometry_msgs::msg::Twist&& ros2_msg,
+    geometry_msgs::Twist& ros1_msg) {
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.linear, ros1_msg.linear);
+  convert_2_to_1<geometry_msgs::Vector3, geometry_msgs::msg::Vector3>(ros2_msg.angular, ros1_msg.angular);
+}
+
+template <>
+inline void convert_1_to_2<geometry_msgs::msg::Twist, geometry_msgs::Twist>(
+    const geometry_msgs::Twist& ros1_msg,
+    geometry_msgs::msg::Twist& ros2_msg) {
+  convert_1_to_2(ros1_msg.linear, ros2_msg.linear);
+  convert_1_to_2(ros1_msg.angular, ros2_msg.angular);
 }
 
 }  // namespace conversions
