@@ -26,7 +26,7 @@ template <>
 inline void convert_2_to_1<std_msgs::Header, std_msgs::msg::Header>(
     const std_msgs::msg::Header& ros2_msg,
     std_msgs::Header& ros1_msg) {
-  convert_2_to_1(ros2_msg.stamp, ros1_msg.stamp);
+  convert_2_to_1<ros::Time, builtin_interfaces::msg::Time>(ros2_msg.stamp, ros1_msg.stamp);
   ros1_msg.frame_id = ros2_msg.frame_id;
 }
 
@@ -34,7 +34,7 @@ template <>
 inline void convert_2_to_1<std_msgs::Header, std_msgs::msg::Header>(
     std_msgs::msg::Header&& ros2_msg,
     std_msgs::Header& ros1_msg) {
-  convert_2_to_1(ros2_msg.stamp, ros1_msg.stamp);
+  convert_2_to_1<ros::Time, builtin_interfaces::msg::Time>(ros2_msg.stamp, ros1_msg.stamp);
   ros1_msg.frame_id = std::move(ros2_msg.frame_id);
 }
 
@@ -42,7 +42,7 @@ template <>
 inline void convert_1_to_2<std_msgs::msg::Header, std_msgs::Header>(
     const std_msgs::Header& ros1_msg,
     std_msgs::msg::Header& ros2_msg) {
-  convert_1_to_2(ros1_msg.stamp, ros2_msg.stamp);
+  convert_1_to_2<builtin_interfaces::msg::Time, ros::Time>(ros1_msg.stamp, ros2_msg.stamp);
   ros2_msg.frame_id = ros1_msg.frame_id;
 }
 
@@ -50,7 +50,7 @@ template <>
 inline void convert_1_to_2<std_msgs::msg::Header, std_msgs::Header>(
     std_msgs::Header&& ros1_msg,
     std_msgs::msg::Header& ros2_msg) {
-  convert_1_to_2(ros1_msg.stamp, ros2_msg.stamp);
+  convert_1_to_2<builtin_interfaces::msg::Time, ros::Time>(ros1_msg.stamp, ros2_msg.stamp);
   ros2_msg.frame_id = std::move(ros1_msg.frame_id);
 }
 

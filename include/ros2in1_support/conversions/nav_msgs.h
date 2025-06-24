@@ -159,6 +159,13 @@ inline void convert_2_to_1<nav_msgs::GetMap::Request, nav_msgs::srv::GetMap::Req
 
 template <>
 inline void convert_1_to_2<nav_msgs::srv::GetMap::Response, nav_msgs::GetMap::Response>(
+    const nav_msgs::GetMap::Response& ros1_msg,
+    nav_msgs::srv::GetMap::Response& ros2_msg) {
+  convert_1_to_2(ros1_msg.map, ros2_msg.map);
+}
+
+template <>
+inline void convert_1_to_2<nav_msgs::srv::GetMap::Response, nav_msgs::GetMap::Response>(
     nav_msgs::GetMap::Response&& ros1_msg,
     nav_msgs::srv::GetMap::Response& ros2_msg) {
   convert_1_to_2(std::move(ros1_msg.map), ros2_msg.map);

@@ -17,32 +17,32 @@ namespace ros2in1_support {
 namespace conversions {
 
 template <typename Ros2MessageT, typename Ros1MessageT>
-inline void convert_1_to_2(const Ros1MessageT& ros1_msg, Ros2MessageT& ros2_msg);
+__attribute__((unused)) inline void convert_1_to_2(const Ros1MessageT& ros1_msg, Ros2MessageT& ros2_msg);
 
 template <typename Ros2MessageT, typename Ros1MessageT>
 inline void convert_1_to_2(Ros1MessageT&& ros1_msg, Ros2MessageT& ros2_msg) {
-  convert_1_to_2(static_cast<const Ros1MessageT&>(ros1_msg), ros2_msg);
+  convert_1_to_2<Ros2MessageT, Ros1MessageT>(static_cast<const Ros1MessageT&>(ros1_msg), ros2_msg);
 }
 
 template <typename Ros1MessageT, typename Ros2MessageT>
-inline void convert_2_to_1(const Ros2MessageT& ros2_msg, Ros1MessageT& ros1_msg);
+__attribute__((unused)) inline void convert_2_to_1(const Ros2MessageT& ros2_msg, Ros1MessageT& ros1_msg);
 
 template <typename Ros1MessageT, typename Ros2MessageT>
 inline void convert_2_to_1(Ros2MessageT&& ros2_msg, Ros1MessageT& ros1_msg) {
-  convert_2_to_1(static_cast<const Ros2MessageT&>(ros2_msg), ros1_msg);
+  convert_2_to_1<Ros1MessageT, Ros2MessageT>(static_cast<const Ros2MessageT&>(ros2_msg), ros1_msg);
 }
 
 template <typename Ros2MessageT, typename Ros1MessageT>
 inline Ros2MessageT convert_1_to_2(const Ros1MessageT& ros1_msg) {
   Ros2MessageT ros2_msg;
-  ::ros2in1_support::conversions::convert_1_to_2(ros1_msg, ros2_msg);
+  ::ros2in1_support::conversions::convert_1_to_2<Ros2MessageT, Ros1MessageT>(ros1_msg, ros2_msg);
   return ros2_msg;
 }
 
 template <typename Ros1MessageT, typename Ros2MessageT>
 inline Ros1MessageT convert_2_to_1(const Ros2MessageT& ros2_msg) {
   Ros1MessageT ros1_msg;
-  ::ros2in1_support::conversions::convert_2_to_1(ros2_msg, ros1_msg);
+  ::ros2in1_support::conversions::convert_2_to_1<Ros1MessageT, Ros2MessageT>(ros2_msg, ros1_msg);
   return ros1_msg;
 }
 
@@ -54,7 +54,7 @@ inline void convert_1_to_2(
   auto ros1_it = ros1_msg.begin();
   auto ros2_it = ros2_msg.begin();
   for( ; ros1_it != ros1_msg.end(); ++ros1_it, ++ros2_it) {
-    ::ros2in1_support::conversions::convert_1_to_2(*ros1_it, *ros2_it);
+    ::ros2in1_support::conversions::convert_1_to_2<Ros2MessageT, Ros1MessageT>(*ros1_it, *ros2_it);
   }
 }
 
@@ -66,7 +66,7 @@ inline void convert_1_to_2(
   auto ros1_it = ros1_msg.begin();
   auto ros2_it = ros2_msg.begin();
   for( ; ros1_it != ros1_msg.end(); ++ros1_it, ++ros2_it) {
-    ::ros2in1_support::conversions::convert_1_to_2(std::move(*ros1_it), *ros2_it);
+    ::ros2in1_support::conversions::convert_1_to_2<Ros2MessageT, Ros1MessageT>(std::move(*ros1_it), *ros2_it);
   }
 }
 
@@ -92,7 +92,7 @@ inline void convert_2_to_1(
   auto ros1_it = ros1_msg.begin();
   auto ros2_it = ros2_msg.begin();
   for( ; ros2_it != ros2_msg.end(); ++ros1_it, ++ros2_it) {
-    ::ros2in1_support::conversions::convert_2_to_1(*ros2_it, *ros1_it);
+    ::ros2in1_support::conversions::convert_2_to_1<Ros1MessageT, Ros2MessageT>(*ros2_it, *ros1_it);
   }
 }
 
@@ -104,7 +104,7 @@ inline void convert_2_to_1(
   auto ros1_it = ros1_msg.begin();
   auto ros2_it = ros2_msg.begin();
   for( ; ros2_it != ros2_msg.end(); ++ros1_it, ++ros2_it) {
-    ::ros2in1_support::conversions::convert_2_to_1(std::move(*ros2_it), *ros1_it);
+    ::ros2in1_support::conversions::convert_2_to_1<Ros1MessageT, Ros2MessageT>(std::move(*ros2_it), *ros1_it);
   }
 }
 
@@ -129,7 +129,7 @@ inline void convert_1_to_2(
   auto ros1_it = ros1_msg.begin();
   auto ros2_it = ros2_msg.begin();
   for( ; ros1_it != ros1_msg.end(); ++ros1_it, ++ros2_it) {
-    ::ros2in1_support::conversions::convert_1_to_2(*ros1_it, *ros2_it);
+    ::ros2in1_support::conversions::convert_1_to_2<Ros2MessageT, Ros1MessageT>(*ros1_it, *ros2_it);
   }
 }
 
@@ -140,7 +140,7 @@ inline void convert_1_to_2(
   auto ros1_it = ros1_msg.begin();
   auto ros2_it = ros2_msg.begin();
   for( ; ros1_it != ros1_msg.end(); ++ros1_it, ++ros2_it) {
-    ::ros2in1_support::conversions::convert_1_to_2(std::move(*ros1_it), *ros2_it);
+    ::ros2in1_support::conversions::convert_1_to_2<Ros2MessageT, Ros1MessageT>(std::move(*ros1_it), *ros2_it);
   }
 }
 
@@ -165,7 +165,7 @@ inline void convert_2_to_1(
   auto ros1_it = ros1_msg.begin();
   auto ros2_it = ros2_msg.begin();
   for( ; ros2_it != ros2_msg.end(); ++ros1_it, ++ros2_it) {
-    ::ros2in1_support::conversions::convert_2_to_1(*ros2_it, *ros1_it);
+    ::ros2in1_support::conversions::convert_2_to_1<Ros1MessageT, Ros2MessageT>(*ros2_it, *ros1_it);
   }
 }
 
@@ -176,7 +176,7 @@ inline void convert_2_to_1(
   auto ros1_it = ros1_msg.begin();
   auto ros2_it = ros2_msg.begin();
   for( ; ros2_it != ros2_msg.end(); ++ros1_it, ++ros2_it) {
-    ::ros2in1_support::conversions::convert_2_to_1(std::move(*ros2_it), *ros1_it);
+    ::ros2in1_support::conversions::convert_2_to_1<Ros1MessageT, Ros2MessageT>(std::move(*ros2_it), *ros1_it);
   }
 }
 
